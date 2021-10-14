@@ -254,7 +254,7 @@ subroutine boundaries(u)
   real,dimension(neq,0:nx+1), intent(inout) :: u
   ! free outflow (salida libre)
   u(:,0)=u(:,1)
-  u(1,nx+1)=u(:,nx)
+  u(:,nx+1)=u(:,nx)
   return
 end subroutine boundaries
 !=======================================================================
