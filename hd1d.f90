@@ -16,6 +16,8 @@ module globals
   ! The simulation times
   real, parameter :: tmax= 1.             ! maximumn integration time
   real, parameter :: dtprint=0.1          ! interval between outputs
+  ! Courant number
+  real, parameter :: Co=0.5
 
   ! simulation constants
   real, parameter :: gamma=5./3.
@@ -142,8 +144,6 @@ subroutine timestep(dt)
   implicit none
   real, intent(out) ::dt
   !internal variables
-  ! Courant number
-  real, parameter :: Co=0.5
   real :: temp,cs,csound,del
   real,dimension(neq) :: prim
   integer :: i
@@ -207,11 +207,12 @@ subroutine tstep(dt,time)
   !   Here is the Lax method, notice that the values at the extremes can
   !   not be calculated, we need to enter then as boundary conditions
   dtx=dt/dx
+!
   do i=1,nx
     up(:,i)=0.5*(u(:,i-1)+u(:,i+1)-dtx*(f(:,i+1)-f(:,i-1)))
-
   end do
-  !   Boundary conditions to the U^n+1
+!
+!   Boundary conditions to the U^n+1
   call boundaries(up)
 
   ! copy the up to the u
@@ -253,7 +254,7 @@ subroutine boundaries(u)
   real,dimension(neq,0:nx+1), intent(inout) :: u
   ! free outflow (salida libre)
   u(:,0)=u(:,1)
-  u(:,nx+1)=u(:,nx)
+  u(1,nx+1)=u(:,nx)
   return
 end subroutine boundaries
 !=======================================================================
